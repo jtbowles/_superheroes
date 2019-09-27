@@ -9,22 +9,32 @@ namespace SuperheroProject.Controllers
 {
     public class SuperheroController : Controller
     {
+        ApplicationDbContext db;
+
+        public SuperheroController()
+        {
+            db = new ApplicationDbContext();
+        }
+
         // GET: Superhero
         public ActionResult Index()
         {
-            return View();
+            var listOfSuperheroes = db.Superheroes.ToList();
+            return View(listOfSuperheroes);
         }
 
         // GET: Superhero/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var superheroFromDb = db.Superheroes.Where(s => s.Id == id).FirstOrDefault();
+            return View(superheroFromDb);
         }
 
         // GET: Superhero/Create
         public ActionResult Create()
         {
-            return View();
+            Superhero superhero = new Superhero();
+            return View(superhero);
         }
 
         // POST: Superhero/Create
@@ -34,7 +44,8 @@ namespace SuperheroProject.Controllers
             try
             {
                 // TODO: Add insert logic here
-
+                db.Superheroes.Add(superhero);
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
             catch
@@ -46,7 +57,8 @@ namespace SuperheroProject.Controllers
         // GET: Superhero/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var superToEdit = db.Superheroes.Where(s => s.Id == id).FirstOrDefault();
+            return View(superToEdit);
         }
 
         // POST: Superhero/Edit/5
@@ -56,7 +68,13 @@ namespace SuperheroProject.Controllers
             try
             {
                 // TODO: Add update logic here
-
+                var superToEdit = db.Superheroes.Where(s => s.Id == id).FirstOrDefault();
+                superToEdit.SuperName = superhero.SuperName;
+                superToEdit.AlterEgo = superhero.AlterEgo;
+                superToEdit.PrimaryAbility = superhero.PrimaryAbility;
+                superToEdit.SecondaryAbility = superhero.SecondaryAbility;
+                superToEdit.CatchPhrase = superhero.CatchPhrase;
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
             catch
