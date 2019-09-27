@@ -86,7 +86,8 @@ namespace SuperheroProject.Controllers
         // GET: Superhero/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var superToDelete = db.Superheroes.Where(s => s.Id == id).FirstOrDefault();
+            return View(superToDelete);
         }
 
         // POST: Superhero/Delete/5
@@ -96,7 +97,9 @@ namespace SuperheroProject.Controllers
             try
             {
                 // TODO: Add delete logic here
-
+                var superToDelete = db.Superheroes.Where(s => s.Id == id).FirstOrDefault();
+                db.Superheroes.Remove(superToDelete);
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
             catch
